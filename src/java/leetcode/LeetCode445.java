@@ -1,7 +1,5 @@
 package leetcode;
 
-import org.junit.Test;
-
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -17,8 +15,7 @@ import java.util.Stack;
  * 链接：https://leetcode-cn.com/problems/add-two-numbers-ii
  */
 public class LeetCode445 {
-    @Test
-    public void test() {
+    public void mainEntrance() {
         int[] a = {2, 4, 3};
         int[] b = {5, 6, 4};
         ListNode l1 = initListNode(a);
