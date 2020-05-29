@@ -13,6 +13,28 @@ package xuzheng.dynamicProgramming;
  * 假设你站在第一层，往下移动，我们把移动到最底层所经过的所有数字之和，定义为路径的长度。请你编程求出从最高层移动到最底层的最短路径长度。
  */
 public class Dynamic01 {
+    public void solve1(int[] src) {
+        int depth = this.getTreeDepth(src);
+        int[][] rst = new int[depth][depth];
+        rst[0][0] = src[0];
+        for (int i = 1; i < depth; i++) {
+            for (int j = 0; j <= i; j++) {
+                int index = i * (i + 1) / 2 + j;
+                if (j == 0) {
+                    rst[i][j] = rst[i - 1][j] + src[index];
+                } else if (j == i) {
+                    rst[i][j] = rst[i - 1][j - 1] + src[index];
+                } else {
+                    rst[i][j] = Math.min(rst[i - 1][j], rst[i - 1][j - 1]) + src[index];
+                }
+            }
+        }
+        int minV = Integer.MAX_VALUE;
+        for (int i = 0; i < rst[depth-1].length; i++) {
+            minV = Math.min(minV, rst[depth-1][i]);
+        }
+        System.out.println("min path = " + minV);
+    }
     public void solve(int[] src) {
         int depth = this.getTreeDepth(src);
         int[][] rst = new int[depth][(int) Math.pow(2, depth - 1)];
@@ -86,6 +108,9 @@ public class Dynamic01 {
 
     public static void main(String[] args) {
         int[] list = new int[]{5, 7, 8, 2, 3, 4, 4, 9, 6, 1, 2, 7, 9, 4, 5};
-        new Dynamic01().solve(list);
+        Dynamic01 dynamic01 = new Dynamic01();
+        dynamic01.solve(list);
+        dynamic01.solve1(list);
+//        System.out.println(dynamic01.calcIndex(3, 7));
     }
 }
