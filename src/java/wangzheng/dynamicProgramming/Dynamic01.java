@@ -1,4 +1,4 @@
-package xuzheng.dynamicProgramming;
+package wangzheng.dynamicProgramming;
 
 /**
  *                      5
