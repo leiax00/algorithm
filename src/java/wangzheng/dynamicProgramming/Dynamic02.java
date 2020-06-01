@@ -6,7 +6,7 @@ package wangzheng.dynamicProgramming;
  */
 public class Dynamic02 {
     public void solve(int payV) {
-
+        int[][] rst = new int[payV][payV];
     }
 
     public static void main(String[] args) {
