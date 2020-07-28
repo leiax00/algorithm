@@ -22,45 +22,21 @@ public class LeetCode146 {
         if (node == null) {
             return -1;
         }
-        if (lastNode.getKey().equals(node.getKey())) {
+        if (lastNode.equals(node)) {
             return node.getValue();
         }
         this.removeFromLink(node);
-        lastNode.setLastNode(node);
-        node.setPreNode(lastNode);
-        node.setLastNode(null);
-        lastNode = node;
+        this.addLast(node);
         return node.getValue();
     }
 
-    private void remove(int key) {
-        Node<Integer> node = this.data.remove(key);
-        removeFromLink(node);
-    }
-
-    private void removeFromLink(Node<Integer> node) {
-        if (firstNode.equals(node)) {
-            firstNode = firstNode.getLastNode();
-            if (firstNode != null) {
-                firstNode.setPreNode(null);
-            }
-        } else {
-            Node<Integer> preNode = node.getPreNode();
-            preNode.setLastNode(node.getLastNode());
-        }
-        node.setPreNode(null);
-        node.setLastNode(null);
-    }
-
     public void put(int key, int value) {
-        while (this.nodeSize >= this.capacity) {
-            this.remove(firstNode.getKey());
-            this.nodeSize--;
-        }
         if (data.containsKey(key)) {
             this.remove(key);
         }
-
+        while (this.nodeSize >= this.capacity) {
+            this.remove(firstNode.getKey());
+        }
         Node<Integer> item = new Node<>(key, value);
         this.nodeSize++;
         data.put(key, item);
@@ -69,10 +45,40 @@ public class LeetCode146 {
             lastNode = item;
             return;
         }
+        this.addLast(item);
+    }
 
-        lastNode.setLastNode(item);
-        item.setPreNode(lastNode);
-        lastNode = item;
+    private void addLast(Node<Integer> node) {
+        lastNode.setLastNode(node);
+        node.setPreNode(lastNode);
+        node.setLastNode(null);
+        lastNode = node;
+    }
+
+    private void remove(int key) {
+        Node<Integer> node = this.data.remove(key);
+        removeFromLink(node);
+        this.nodeSize--;
+    }
+
+    private void removeFromLink(Node<Integer> node) {
+        if (firstNode.equals(node)) {
+            firstNode = firstNode.getLastNode();
+            if (firstNode != null) {
+                firstNode.setPreNode(null);
+            }
+        } else if (lastNode.equals(node)) {
+            Node<Integer> preNode = node.getPreNode();
+            preNode.setLastNode(null);
+            lastNode = preNode;
+        }else {
+            Node<Integer> preNode = node.getPreNode();
+            Node<Integer> lastNode = node.getLastNode();
+            preNode.setLastNode(lastNode);
+            lastNode.setPreNode(preNode);
+        }
+        node.setPreNode(null);
+        node.setLastNode(null);
     }
 
 
