@@ -2,6 +2,7 @@ package leetcode;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class LeetCode146 {
 
@@ -24,24 +25,25 @@ public class LeetCode146 {
         if (lastNode.getKey().equals(node.getKey())) {
             return node.getValue();
         }
-
-        Node<Integer> preNode = node.getPreNode();
-        if (preNode != null) {
-            preNode.setLastNode(node.getLastNode());
-        } else {
-            firstNode = node.getLastNode();
-        }
-        node.setPreNode(null);
-        node.setLastNode(null);
+        this.removeFromLink(node);
         lastNode.setLastNode(node);
+        node.setPreNode(lastNode);
+        node.setLastNode(null);
         lastNode = node;
         return node.getValue();
     }
 
-    public void remove(Node<Integer> node) {
+    private void remove(int key) {
+        Node<Integer> node = this.data.remove(key);
+        removeFromLink(node);
+    }
+
+    private void removeFromLink(Node<Integer> node) {
         if (firstNode.equals(node)) {
             firstNode = firstNode.getLastNode();
-            firstNode.setPreNode(null);
+            if (firstNode != null) {
+                firstNode.setPreNode(null);
+            }
         } else {
             Node<Integer> preNode = node.getPreNode();
             preNode.setLastNode(node.getLastNode());
@@ -51,25 +53,26 @@ public class LeetCode146 {
     }
 
     public void put(int key, int value) {
-        Node<Integer> item = data.get(key);
-        if (item != null) {
-            this.remove(item);
-            this.nodeSize--;
-        }
         while (this.nodeSize >= this.capacity) {
-            data.remove(firstNode.getKey());
-            firstNode = firstNode.getLastNode();
-            if (firstNode != null) {
-                firstNode.setPreNode(null);
-            }
+            this.remove(firstNode.getKey());
             this.nodeSize--;
         }
-        item = new Node<>(key, value);
+        if (data.containsKey(key)) {
+            this.remove(key);
+        }
+
+        Node<Integer> item = new Node<>(key, value);
+        this.nodeSize++;
+        data.put(key, item);
+        if (firstNode == null || lastNode == null) {
+            firstNode = item;
+            lastNode = item;
+            return;
+        }
+
         lastNode.setLastNode(item);
         item.setPreNode(lastNode);
         lastNode = item;
-        data.put(key, item);
-        this.nodeSize++;
     }
 
 
@@ -82,6 +85,19 @@ public class LeetCode146 {
         public Node(T key, T value) {
             this.key = key;
             this.value = value;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node<?> node = (Node<?>) o;
+            return key.equals(node.key);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(key);
         }
 
         public Node<T> getPreNode() {
