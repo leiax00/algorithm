@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * LRU实现
+ */
 public class LeetCode146 {
 
     private Node<Integer> firstNode;
